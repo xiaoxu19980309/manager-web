@@ -19,20 +19,16 @@ axios.interceptors.request.use((config) => {
   }
   return config
 }, (error) => {
-  vm.$toast('错误的传参')
+  // vm.$toast('错误的传参')
   return Promise.reject(error)
 })
 
 axios.interceptors.response.use(response => {
-  const { status, data, msg } = response.data
-
+  const { resultCode, data, resultMsg } = response.data
   if (response.status === 200) {
-    const except = (status === -9 && response.config.url.indexOf('web_get_goods') > -1)
-    if (status > -1 || except) {
-      return data
-    } else {
-      vm.$toast(msg || '操作失败')
-      return Promise.reject(new Error(msg || '操作失败'))
+    const except = (resultCode === -9 && response.config.url.indexOf('web_get_goods') > -1)
+    if (resultCode > -1 || except) {
+      return response.data
     }
     // if (status === '403') {
     //   vm.$toast('你还未登录')
@@ -40,7 +36,6 @@ axios.interceptors.response.use(response => {
     //   location.reload()
     // }
   } else {
-    vm.$toast('与服务器连接失败')
     return Promise.reject(new Error('与服务器连接失败'))
   }
 }, error => {
@@ -57,7 +52,6 @@ axios.interceptors.response.use(response => {
         break
       default:
     }
-    vm.$toast(error.message)
   }
   return Promise.reject(error)
 })

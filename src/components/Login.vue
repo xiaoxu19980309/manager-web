@@ -8,7 +8,7 @@
       <el-form-item label="密码" prop="password">
         <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
       </el-form-item>
-      <el-form-item>
+      <el-form-item style="text-align: right;">
         <el-button type="primary" v-on:click="onSubmit('loginForm')">登录</el-button>
       </el-form-item>
     </el-form>
@@ -27,11 +27,12 @@
 </template>
 
 <script>
-import { Button, Select } from 'element-ui';
+import { Button } from 'element-ui';
+import { API } from "@/utils/api"
 export default {
   name: 'Login',
   components: {
-    Button,Select
+    Button
   },
   data () {
     return {
@@ -51,22 +52,32 @@ export default {
     }
   },
   mounted() {
-    this.axios.post('api/user/login',{
-      username: "xudeng",
-      password: "123456",
-    }).then(res =>{
-
-    }).catch(e =>{
-
-    })
+    
   },
   methods: {
     onSubmit(formName) {
         // 为表单绑定验证功能
         this.$refs[formName].validate((valid) => {
           if (valid) {
+            // this.axios.post(API.adminLogin,{
+            //   username: "xudeng",
+            //   password: "123456",
+            // }).then(res =>{
+            //   this.$message.info(res.resultMsg);
+            //   if(res.resultCode!=200){
+            //     this.$message.info(res.resultMsg);
+            //   }else{
+            //     this.$router.push({
+            //       path: '/home'
+            //     })
+            //   }
+            // }).catch(e =>{
+
+            // })
+            this.$router.push({
+              path: '/home'
+            })
             // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
-            this.$router.push("/home");
           } else {
             this.dialogVisible = true;
             return false;
@@ -85,7 +96,7 @@ export default {
   .login-box {
     border: 1px solid #DCDFE6;
     width: 350px;
-    margin: 180px auto;
+    margin: 100px auto 0;
     padding: 35px 55px 15px 35px;
     border-radius: 5px;
     -webkit-border-radius: 5px;
@@ -95,7 +106,7 @@ export default {
 
   .login-title {
     text-align: center;
-    margin: 0 auto 40px auto;
+    /* margin: 0 auto 40px auto; */
     color: #303133;
   }
 </style>

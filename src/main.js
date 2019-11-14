@@ -7,6 +7,7 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import qs from 'qs'
 import router from './router'
+import Layout from './Layout'
 
 Vue.config.productionTip = false
 Vue.prototype.axios = axios
@@ -18,6 +19,6 @@ new Vue({
   el: '#app',
   router,
   axios,
-  components: { App },
-  template: '<App/>'
+  components: { Layout },
+  template: '<Layout/>'
 })

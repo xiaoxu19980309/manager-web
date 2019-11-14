@@ -14,9 +14,10 @@ export default new Router({
       meta: { title: "后台管理系统" }
     },
     {
-      path: 'home',
+      path: '/home',
       name: "Home",
       component: Home,
+      meta: { title: "后台管理系统" }
     }
   ]
 })
