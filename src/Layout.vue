@@ -10,10 +10,8 @@
       <el-container>
         <el-aside v-if="!isLogin" width="200px">
            <el-menu
-            default-active="1"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @close="handleClose">
+            @select="handleSelect">
             <el-menu-item index="1">
               <i class="el-icon-goods"></i>
               <span slot="title">商品管理</span>
@@ -58,12 +56,29 @@ export default {
     this.isLogin = sessionStorage.getItem("token")?true:false
   },
   methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
+      handleSelect(key){
+        let _this = this
+        switch(key){
+          case "1": _this.$router.push({path:"/shopGoods"});
+                  break;
+          case "2": 
+                  _this.$router.push({path:"/orderList"});
+                  break;
+          case "3":
+                  _this.$router.push({path: "/statistic"})
+                  break;
+          case "4":
+                  _this.$router.push({path: "/userManager"})
+                  break;
+          case "5":
+                  _this.$router.push({path: "/modelManager"})
+                  break;
+          case "6":
+                  _this.$router.push({path: "/modelContent"})
+                  break;
+          // default: this.$router.push({path:"/shopGoods"});
+        }
       },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
-      }
   }
 }
 </script>
@@ -75,6 +90,8 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  /* height: 100vh; */
+  /* overflow: hidden; */
 }
 *{
   margin: 0;
@@ -89,7 +106,6 @@ ul {
   padding: 0;
 }
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 a {
@@ -116,6 +132,7 @@ a {
   }
   .el-container{
     height: 100vh;
+    /* overflow: hidden; */
   }
   .el-aside {
     background-color: #E9EEF3;
@@ -126,22 +143,14 @@ a {
     background-color: #E9EEF3;
   }
   .el-main {
-    /* background-color: #E9EEF3; */
     color: #333;
     text-align: center;
-    line-height: 100px;
+    line-height: 0px;
+    overflow: hidden;
+    /* height: 100vh; */
   }
   
   body > .el-container {
     margin-bottom: 40px;
   }
-  
-  /* .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-  
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  } */
 </style>
