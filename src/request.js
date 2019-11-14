@@ -7,10 +7,6 @@ axios.defaults.withCredentials = false
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 axios.defaults.baseURL='http://localhost:8082/'
 
-// product
-// 'http://beidou.edianlai.com/beidou/api'
-// axios.defaults.baseURL = '/beidou/api'
-
 // POST传参序列化
 axios.interceptors.request.use((config) => {
   let token = sessionStorage.getItem("token")
