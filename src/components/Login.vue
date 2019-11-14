@@ -2,11 +2,11 @@
   <div>
     <el-form ref="loginForm" :model="form" :rules="rules" label-width="80px" class="login-box">
       <h3 class="login-title">欢迎登录</h3>
-      <el-form-item label="账号" prop="username">
-        <el-input type="text" placeholder="请输入账号" v-model="form.username"/>
+      <el-form-item label="账号" prop="username" style="margin-bottom: 20px;">
+        <el-input type="text" placeholder="请输入账号" v-model="form.username" style="width: 100%;"/>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" placeholder="请输入密码" v-model="form.password"/>
+      <el-form-item label="密码" prop="password" style="margin-bottom: 20px;">
+        <el-input type="password" placeholder="请输入密码" v-model="form.password"  style="width: 100%;"/>
       </el-form-item>
       <el-form-item style="text-align: right;">
         <el-button type="primary" v-on:click="onSubmit('loginForm')">登录</el-button>
@@ -51,6 +51,9 @@ export default {
       dialogVisible: false
     }
   },
+  beforeMount(){
+    sessionStorage.removeItem("token")
+  },
   mounted() {
     
   },
@@ -59,24 +62,24 @@ export default {
         // 为表单绑定验证功能
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            // this.axios.post(API.adminLogin,{
-            //   username: "xudeng",
-            //   password: "123456",
-            // }).then(res =>{
-            //   this.$message.info(res.resultMsg);
-            //   if(res.resultCode!=200){
-            //     this.$message.info(res.resultMsg);
-            //   }else{
-            //     this.$router.push({
-            //       path: '/home'
-            //     })
-            //   }
-            // }).catch(e =>{
+            this.axios.post(API.adminLogin,{
+              username: "xudeng",
+              password: "123456",
+            }).then(res =>{
+              if(res.resultCode!=200){
+                this.$message.info(res.resultMsg);
+              }else{
+                sessionStorage.setItem("token",res.data.token)
+                this.$router.push({
+                  path: '/shopGoods'
+                })
+              }
+            }).catch(e =>{
 
-            // })
-            this.$router.push({
-              path: '/shopGoods'
             })
+            // this.$router.push({
+            //   path: '/shopGoods'
+            // })
             // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
           } else {
             this.dialogVisible = true;
@@ -96,6 +99,7 @@ export default {
   .login-box {
     border: 1px solid #DCDFE6;
     width: 350px;
+    line-height: 50px;
     margin: 100px auto 0;
     padding: 35px 55px 15px 35px;
     border-radius: 5px;

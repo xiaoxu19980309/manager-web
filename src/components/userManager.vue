@@ -74,6 +74,7 @@
 </template>
 <script>
 import "@/css/global.css";
+import {API} from "@/utils/api"
 export default {
   name: "Usermanager",
   data(){
@@ -106,9 +107,16 @@ export default {
     }
   },
   mounted(){
-
+    this.getData()
   },
   methods: {
+    getData(param){
+      this.axios.post(API.getUserList,param).then(res=>{
+        
+      }).catch(e=>{
+
+      })
+    },
     handleCurrentChange(val){
 
     }

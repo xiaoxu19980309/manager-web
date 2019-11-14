@@ -5,7 +5,6 @@ const vm = new Vue()
 
 axios.defaults.withCredentials = false
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
-
 axios.defaults.baseURL='http://localhost:8082/'
 
 // product
@@ -14,6 +13,10 @@ axios.defaults.baseURL='http://localhost:8082/'
 
 // POST传参序列化
 axios.interceptors.request.use((config) => {
+  let token = sessionStorage.getItem("token")
+  if(token){
+    config.headers.Authorization = token
+  }
   if (config.method === 'post' && config.headers['Content-Type'] !== 'multipart/form-data') {
     config.data = qs.stringify(config.data)
   }
