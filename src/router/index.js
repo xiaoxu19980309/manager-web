@@ -9,8 +9,9 @@ import ModelManager from "@/components/modelManager"
 import ModelContent from "@/components/modelContent"
 
 Vue.use(Router)
+const vm = new Vue()
 
-export default new Router({
+const router =  new Router({
   routes: [
     {
       path: '/',
@@ -22,7 +23,7 @@ export default new Router({
       path: '/shopGoods',
       name: "ShopGoods",
       component: ShopGoods,
-      meta: { title: "商品管理" }
+      meta: { title: "商品管理",isLogin:true }
     },
     {
       path: "/orderList",
@@ -56,3 +57,21 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+    if(to.matched.some(res=>res.meta.isLogin)){//判断是否需要登录
+      if (sessionStorage.getItem("token")) {
+          next();
+      }else{
+          vm.$message.error("登录过期！请重新登录")
+          next({
+              path:"/",
+          });
+      }
+    }else{
+        next()
+    }
+})
+
+
+export default router

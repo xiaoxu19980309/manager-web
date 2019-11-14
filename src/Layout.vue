@@ -1,14 +1,13 @@
 <template>
   <div id="app">
     <el-container>
-      <el-header>
+      <el-header v-show="isLogin">
         <img src="./assets/logo.png" class="header-img" alt="">
         <h1>青竹管理系统</h1>
-        <el-button v-if="!isLogin" class="button" type="text">登录</el-button>
-        <el-button v-else class="button" type="text">退出</el-button>
+        <el-button class="button" type="text" @click="lgout()">退出</el-button>
       </el-header>
       <el-container>
-        <el-aside v-if="!isLogin" width="200px">
+        <el-aside v-show="isLogin" width="200px">
            <el-menu
             class="el-menu-vertical-demo"
             @select="handleSelect">
@@ -55,7 +54,14 @@ export default {
   mounted(){
     this.isLogin = sessionStorage.getItem("token")?true:false
   },
+  updated(){
+    this.isLogin = sessionStorage.getItem("token")?true:false
+  },
   methods: {
+      lgout(){
+        sessionStorage.removeItem("token")
+        this.$router.push({path: "/"})
+      },
       handleSelect(key){
         let _this = this
         switch(key){
@@ -145,7 +151,6 @@ a {
   .el-main {
     color: #333;
     text-align: center;
-    line-height: 0px;
     overflow: hidden;
     /* height: 100vh; */
   }
