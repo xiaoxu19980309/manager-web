@@ -7,6 +7,7 @@ import Statistic from "@/components/Statistic"
 import UserManager from "@/components/userManager"
 import ModelManager from "@/components/modelManager"
 import ModelContent from "@/components/modelContent"
+import GoodsType from "@/components/goodsType"
 
 Vue.use(Router)
 const vm = new Vue()
@@ -23,6 +24,12 @@ const router =  new Router({
       path: '/shopGoods',
       name: "ShopGoods",
       component: ShopGoods,
+      meta: { isLogin:true }
+    },
+    {
+      path: '/goodsType',
+      name: "GoodsType",
+      component: GoodsType,
       meta: { isLogin:true }
     },
     {
@@ -57,6 +64,13 @@ const router =  new Router({
     }
   ]
 })
+
+const originalPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => {
+    window.location.reload();
+  })
+}
 
 router.beforeEach((to, from, next) => {
     if(to.matched.some(res=>res.meta.isLogin)){//判断是否需要登录

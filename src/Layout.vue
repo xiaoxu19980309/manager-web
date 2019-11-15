@@ -9,11 +9,16 @@
       <el-container>
         <el-aside v-show="isLogin" width="200px">
            <el-menu
+            :default-active="chooseIndex"
             class="el-menu-vertical-demo"
             @select="handleSelect">
             <el-menu-item index="1">
               <i class="el-icon-goods"></i>
               <span slot="title">商品管理</span>
+            </el-menu-item>
+            <el-menu-item index="7">
+              <i class="el-icon-menu"></i>
+              <span slot="title">商品类别管理</span>
             </el-menu-item>
             <el-menu-item index="2">
               <i class="el-icon-document"></i>
@@ -49,10 +54,29 @@ export default {
   data(){
     return {
       isLogin: false,
+      chooseIndex: "1",
     }
   },
   mounted(){
     this.isLogin = sessionStorage.getItem("token")?true:false
+    let active = location.href.split('#')[1]
+    let _this = this
+    switch(active){
+      case "/shopGoods": _this.chooseIndex = "1";
+                      break;
+      case "/orderList": _this.chooseIndex = "2";
+                      break;
+      case "/statistic": _this.chooseIndex = "3";
+                      break;
+      case "/userManager": _this.chooseIndex = "4";
+                      break;
+      case "/modelManager": _this.chooseIndex = "5";
+                      break;
+      case "/modelContent": _this.chooseIndex = "6";
+                      break;
+      case "/goodsType": _this.chooseIndex = "7";
+                      break;
+    }
   },
   updated(){
     this.isLogin = sessionStorage.getItem("token")?true:false
@@ -81,6 +105,9 @@ export default {
                   break;
           case "6":
                   _this.$router.push({path: "/modelContent"})
+                  break;
+          case "7":
+                  _this.$router.push({path: '/goodsType'})
                   break;
           // default: this.$router.push({path:"/shopGoods"});
         }
