@@ -173,7 +173,7 @@ export default {
 }
 </script>
 <style scoped>
-.el-form-item__content{
-  text-align: right;
+.el-form{
+  text-align: left;
 }
 </style>

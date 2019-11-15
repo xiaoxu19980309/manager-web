@@ -40,6 +40,11 @@ axios.interceptors.response.use(response => {
 }, error => {
   if (error && error.response) {
     switch (error.response.status) {
+      case 401:
+        error.message = "登录过期！"
+        sessionStorage.removeItem("token")
+        window.location.reload();
+        break;
       case 403:
         error.message = '没有访问权限'
         break
@@ -52,6 +57,7 @@ axios.interceptors.response.use(response => {
       default:
     }
   }
+  vm.$message.error(error.message)
   return Promise.reject(error)
 })
 

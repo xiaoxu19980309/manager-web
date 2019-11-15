@@ -1,6 +1,7 @@
 const API = {
-  adminLogin: "api/user/adminLogin",
+  adminLogin: "common/adminLogin",
   getUserList: "api/user/getUserList",
+  changeAdminStatus: "api/user/changeAdminStatus",
   
 }
 

@@ -131,5 +131,7 @@ export default {
 }
 </script>
 <style scoped>
-
+.el-form{
+  text-align: left;
+}
 </style>

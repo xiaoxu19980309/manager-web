@@ -17,7 +17,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">查询</el-button>
+          <el-button type="primary" @click="selectByAll">查询</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -28,15 +28,15 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="date"
+          prop="username"
           label="用户名">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="phone"
           label="手机号">
         </el-table-column>
         <el-table-column
-          prop="date"
+          prop="gmt_create"
           label="创建时间">
         </el-table-column>
         <el-table-column
@@ -49,14 +49,18 @@
         </el-table-column>
         <el-table-column label="是否加入黑名单">
           <template slot-scope="scope">
-            <el-radio v-model="scope.row.status" label="1">是</el-radio>
-            <el-radio v-model="scope.row.status" label="2">否</el-radio>
+            <el-radio-group v-model="scope.row.is_delete"  @change="addBlack(scope.row)">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column label="是否具有管理员权限">
           <template slot-scope="scope">
-            <el-radio v-model="scope.row.status" label="1">是</el-radio>
-            <el-radio v-model="scope.row.status" label="2">否</el-radio>
+            <el-radio-group v-model="scope.row.is_admin" @change="changePow(scope.row)">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </template>
         </el-table-column>
       </el-table>
@@ -82,23 +86,7 @@ export default {
       pageSize: 10,
       total: 0,
       currentPage: 1,
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
+      tableData: [],
       param: {
         username: "",
         phone: "",
@@ -112,10 +100,70 @@ export default {
   methods: {
     getData(param){
       this.axios.post(API.getUserList,param).then(res=>{
-        
+        this.total = res.data.total
+        this.tableData = res.data.list
       }).catch(e=>{
-
+        this.$message.error("出错了！")
       })
+    },
+    selectByAll(){
+      let param = {
+        pageNum: this.currentPage
+      }
+      if(!!this.param.username)
+        param.username = this.param.username
+      if(!!this.param.phone)
+        param.phone = this.param.phone
+      
+      this.getData(param)
+    },
+    addBlack(item){
+      let param = {
+        username: item.username,
+        is_delete: parseInt(item.is_delete)
+      }
+      this.$confirm("确定将该用户加入黑名单？","提示",{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(()=>{
+        this.axios.post(API.changeAdminStatus,param).then(res =>{
+          if(res.resultCode==200){
+            this.$message.success(res.resultMsg)
+          }else{
+            this.$message.error(res.resultMsg)
+          }
+        }).catch(e =>{
+            
+        })
+      }).catch(()=>{
+        item.is_delete = item.is_delete==1?0:1
+      })
+    },
+    changePow(item){
+      let param = {
+        username: item.username,
+        is_admin: parseInt(item.is_admin),
+      }
+      this.$confirm("确定修改该用户管理员权限？","提示",{
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      }).then(()=>{
+        console.log(param)
+        this.axios.post(API.changeAdminStatus,param).then(res =>{
+          if(res.resultCode==200){
+            this.$message.success(res.resultMsg)
+          }else{
+            this.$message.error(res.resultMsg)
+          }
+        }).catch(e =>{
+            this.$message.error("出错了！")
+        })
+      }).catch(()=>{
+        item.is_admin = item.is_admin==1?0:1
+      })
+      
     },
     handleCurrentChange(val){
 

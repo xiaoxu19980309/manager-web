@@ -23,37 +23,37 @@ const router =  new Router({
       path: '/shopGoods',
       name: "ShopGoods",
       component: ShopGoods,
-      meta: { title: "商品管理",isLogin:true }
+      meta: { isLogin:true }
     },
     {
       path: "/orderList",
       name: "OrderList",
       component: OrderList,
-      meta: { title: "订单管理" }
+      meta: { isLogin:true }
     },
     {
       path: "/statistic",
       name: "Statistic",
       component: Statistic,
-      meta: { title: "订单管理" }
+      meta: { isLogin:true }
     },
     {
       path: "/userManager",
       name: "UserManager",
       component: UserManager,
-      meta: { title: "用户管理" }
+      meta: { isLogin:true }
     },
     {
       path: "/modelManager",
       name: "ModelManager",
       component: ModelManager,
-      meta: { title: "首页模块管理" }
+      meta: { isLogin:true }
     },
     {
       path: "/modelContent",
       name: "ModelContent",
       component: ModelContent,
-      meta: { title: "模块内容管理" }
+      meta: { isLogin:true }
     }
   ]
 })
