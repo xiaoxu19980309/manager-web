@@ -122,23 +122,44 @@ export default {
         username: item.username,
         is_delete: parseInt(item.is_delete)
       }
-      this.$confirm("确定将该用户加入黑名单？","提示",{
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning",
-      }).then(()=>{
-        this.axios.post(API.changeAdminStatus,param).then(res =>{
-          if(res.resultCode==200){
-            this.$message.success(res.resultMsg)
-          }else{
-            this.$message.error(res.resultMsg)
-          }
-        }).catch(e =>{
-            
+      if(param.is_delete==1){
+        this.$confirm("确定将该用户加入黑名单？","提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(()=>{
+          this.axios.post(API.changeAdminStatus,param).then(res =>{
+            if(res.resultCode==200){
+              this.$message.success(res.resultMsg)
+            }else{
+              this.$message.error(res.resultMsg)
+            }
+          }).catch(e =>{
+              
+          })
+        }).catch(()=>{
+          item.is_delete = item.is_delete==1?0:1
         })
-      }).catch(()=>{
-        item.is_delete = item.is_delete==1?0:1
-      })
+      }else{
+        this.$confirm("确定取消该用户的黑名单？","提示",{
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning",
+        }).then(()=>{
+          this.axios.post(API.changeAdminStatus,param).then(res =>{
+            if(res.resultCode==200){
+              this.$message.success(res.resultMsg)
+            }else{
+              this.$message.error(res.resultMsg)
+            }
+          }).catch(e =>{
+              
+          })
+        }).catch(()=>{
+          item.is_delete = item.is_delete==1?0:1
+        })
+      }
+      
     },
     changePow(item){
       let param = {
