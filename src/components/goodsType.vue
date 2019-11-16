@@ -14,22 +14,10 @@
         stripe
         border
         style="width: 100%">
-        <el-table-column
-          prop="type_name"
-          label="商品类别名称">
-        </el-table-column>
-        <el-table-column
-          prop="note"
-          label="简介">
-        </el-table-column>
-        <el-table-column
-          prop="gmt_create"
-          label="创建时间">
-        </el-table-column>
-        <el-table-column
-          prop="gmt_modified"
-          label="最后修改时间">
-        </el-table-column>
+        <el-table-column prop="type_name" label="商品类别名称"></el-table-column>
+        <el-table-column prop="note" label="简介"></el-table-column>
+        <el-table-column prop="gmt_create" label="创建时间"></el-table-column>
+        <el-table-column prop="gmt_modified" label="最后修改时间"></el-table-column>
         <el-table-column label="是否启用">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.is_active" @change="changeActive(scope.row)">
@@ -157,8 +145,8 @@ export default {
             this.$message.error(res.resultMsg)
           }else{
             this.$message.success(res.resultMsg)
+            this.getTableData({pageNum: this.currentPage})
           }
-          this.getTableData({pageNum: this.currentPage})
         }).catch(e =>{
 
         })
@@ -178,8 +166,8 @@ export default {
             this.$message.error(res.resultMsg)
           }else{
             this.$message.success(res.resultMsg)
+            this.getTableData({pageNum: this.currentPage})
           }
-          this.getTableData({pageNum: this.currentPage})
         }).catch(e =>{
 
         })
