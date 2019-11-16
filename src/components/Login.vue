@@ -60,12 +60,19 @@ export default {
   methods: {
     onSubmit(formName) {
         // 为表单绑定验证功能
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.post(API.adminLogin,{
               username: "xudeng",
               password: "123456",
             }).then(res =>{
+              loading.close();
               if(res.resultCode!=200){
                 this.$message.info(res.resultMsg);
               }else{
@@ -75,12 +82,8 @@ export default {
                 })
               }
             }).catch(e =>{
-
+              loading.close();
             })
-            // this.$router.push({
-            //   path: '/shopGoods'
-            // })
-            // 使用 vue-router 路由到指定页面，该方式称之为编程式导航
           } else {
             this.dialogVisible = true;
             return false;
