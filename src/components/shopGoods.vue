@@ -2,7 +2,7 @@
   <div>
     <div class="bg-color padding20X paddingX20">
       <el-form inline>
-        <el-form-item>
+        <el-form-item label="商品类别">
           <el-select v-model="param.type" placeholder="请选择类别">
             <el-option
               v-for="(item,index) in types"
@@ -13,18 +13,18 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="状态">
           <el-select v-model="param.status" placeholder="请选择状态">
             <el-option
               v-for="(item,index) in status"
               :key="index"
-              :label="item.type_name"
+              :label="item.label"
               :value="item.id"
             >
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item>
+        <el-form-item label="商品名称">
           <el-input
             placeholder="请输入商品名称"
             v-model="param.goodName"
@@ -32,7 +32,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
+          <el-button type="primary" @click="selectByAll">搜索</el-button>
         </el-form-item>
         <el-form-item style="float:right">
           <el-button @click="editGoods()">新增商品</el-button>
@@ -46,13 +46,23 @@
         border
         style="width: 100%">
         <el-table-column prop="goods_name" label="商品名称"></el-table-column>
-        <el-table-column prop="date" label="类别"></el-table-column>
-        <el-table-column prop="gmt_create" label="创建时间"></el-table-column>
-        <el-table-column prop="name" label="状态"></el-table-column>
+        <el-table-column prop="typeName" label="类别"></el-table-column>
+        <el-table-column prop="gmt_modified" label="最后修改时间"></el-table-column>
+        <el-table-column prop="name" label="状态">
+          <template slot-scope="scope">
+            <span v-if="scope.row.is_delete!=1>0">
+              <span v-if="scope.row.goods_num>0">有货</span>
+              <span v-else>缺货</span>
+            </span>
+            <span v-else>下架</span>
+          </template>
+        </el-table-column>
         <el-table-column label="是否特价">
           <template slot-scope="scope">
-            <span v-if="scope.row.is_special==0">否</span>
-            <span v-else>是</span>
+            <el-radio-group style="margin-left:20px" v-model="scope.row.is_special" @change="changeSpecial(scope.row)">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </template>
         </el-table-column>
         <el-table-column prop="goods_num" label="库存"></el-table-column>
@@ -83,12 +93,12 @@
       :before-close="handleClose">
       <el-form label-width="90px">
         <el-form-item label="商品名称" required style="margin-bottom:15px">
-          <el-input style="margin-left:20px" v-model="form.goodName"></el-input>
+          <el-input style="margin-left:20px" v-model="form.goodName" maxlength="50"></el-input>
         </el-form-item>
         <el-form-item label="商品类别" required style="margin-bottom:15px">
           <el-select style="margin-left:20px" v-model="form.type" placeholder="请选择类别">
             <el-option
-              v-for="(item,index) in types"
+              v-for="(item,index) in types_copy"
               :key="index"
               :label="item.type_name"
               :value="item.id"
@@ -110,7 +120,6 @@
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
-          
         </el-form-item>
         <el-form-item label="上传图片" style="margin-bottom:15px">
           <el-upload
@@ -147,20 +156,35 @@ export default {
       title: "新增商品",
       dialogVisible: false,
       types: [],
-      status: [],
+      types_copy: [],
+      status: [{
+        id: "0",
+        label: "全部"
+      },{
+        id: "1",
+        label: "有货"
+      },{
+        id: "2",
+        label: "缺货",
+      },{
+        id: "3",
+        label: "下架"
+      }],
       tableData: [],
       fileList: [],
       param: {
-        type: "",
-        status: "",
+        type: 0,
+        status: "0",
         goodName: "",
       },
       form: {
+        id: "",
         goodName: "",
         type: "",
         price: "",
         number: "",
         isSpecial: 0,
+        description: "",
       }
     }
   },
@@ -181,6 +205,18 @@ export default {
 
       })
     },
+    //搜索
+    selectByAll(){
+      let param = {
+        pageNum: this.currentPage,
+        type_id: this.param.type,
+        status: this.param.status,
+      }
+      if(!!this.param.goodName){
+        param.goods_name = this.param.goodName
+      }
+      this.getTable(param)
+    },
     //获取类别列表
     getTypeList(){
       this.axios.post(API.getTypeList,{
@@ -188,6 +224,8 @@ export default {
       }).then(res =>{
         if(res.resultCode==200){
           this.types = res.data.list
+          this.types_copy = [].concat(this.types)
+          this.types.splice(0,0,{id: 0,type_name: "全部"})
         }else{
           this.$message.error(res.resultMsg)
         }
@@ -208,6 +246,13 @@ export default {
         this.dialogVisible = true
       }else{
         this.dialogVisible = true
+        this.form.id = good.id
+        this.form.goodName = good.goods_name
+        this.form.type = good.type_id
+        this.form.price = good.goods_price
+        this.form.number = good.goods_num
+        this.form.isSpecial = good.is_special
+        this.form.description = good.description
         this.title = "编辑商品"
       }
     },
@@ -251,17 +296,78 @@ export default {
       if(!!this.form.description){
         param.description = this.form.description
       }
-      this.axios.post(API.addGoods,param).then(res=>{
-        if(res.resultCode!=200){
-          this.$message.error(res.resultMsg)
-        }else{
-          this.$message.success(res.resultMsg)
-          this.getTable({pageNum: this.currentPage})
-        }
-      }).catch(e=>{
+      if(!!!this.form.id){
+        this.axios.post(API.addGoods,param).then(res=>{
+          if(res.resultCode!=200){
+            this.$message.error(res.resultMsg)
+          }else{
+            this.dialogVisible = false
+            this.$message.success(res.resultMsg)
+            this.getTable({pageNum: this.currentPage})
+          }
+        }).catch(e=>{
 
-      })
+        })
+      }else{
+        param.id = this.form.id
+        this.axios.post(API.updateGoods,param).then(res=>{
+          if(res.resultCode!=200){
+            this.$message.error(res.resultMsg)
+          }else{
+            this.dialogVisible = false
+            this.$message.success(res.resultMsg)
+            this.getTable({pageNum: this.currentPage})
+          }
+        }).catch(e=>{
 
+        })
+      }
+      
+
+    },
+    //修改商品是否特价
+    changeSpecial(item){
+      let param = {
+        id: item.id,
+        is_special: parseInt(item.is_special)
+      }
+      if(item.is_special){
+        this.$confirm("是否将该商品设置为特价？","提示",{
+          confirmTextButton: "确定",
+          cancelTextButton: "取消",
+          type: "warning"
+        }).then(()=>{
+          this.axios.post(API.updateGoods,param).then(res=>{
+            if(res.resultCode!=200){
+              this.$message.error(res.resultMsg)
+            }else{
+              this.$message.success(res.resultMsg)
+            }
+          }).catch(e=>{
+
+          })
+        }).catch(()=>{
+          item.is_special = item.is_special==1?0:1
+        })
+      }else{
+        this.$confirm("是否取消该商品特价？","提示",{
+          confirmTextButton: "确定",
+          cancelTextButton: "取消",
+          type: "warning"
+        }).then(()=>{
+          this.axios.post(API.updateGoods,param).then(res=>{
+            if(res.resultCode!=200){
+              this.$message.error(res.resultMsg)
+            }else{
+              this.$message.success(res.resultMsg)
+            }
+          }).catch(e=>{
+
+          })
+        }).catch(()=>{
+          item.is_special = item.is_special==1?0:1
+        })
+      }
     },
     //分页
     handleCurrentChange(val){

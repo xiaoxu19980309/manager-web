@@ -8,7 +8,7 @@ const API = {
   updateGoodsType: "api/goodsType/updateGoodsType",//更新类别
   addGoods: "api/goods/addGoods",//添加商品
   getGoodsList: "api/goods/getGoodsList",//获取商品列表
-
+  updateGoods: "api/goods/updateGoods",//修改商品信息
 }
 
 export { API }
