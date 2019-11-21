@@ -164,10 +164,11 @@ a {
     font-size: 18px;
   }
   .el-container{
-    height: 100vh;
+    /* height: 100vh; */
     /* overflow: hidden; */
   }
   .el-aside {
+    min-height: 100vh;
     background-color: #E9EEF3;
     color: #333;
     text-align: center;

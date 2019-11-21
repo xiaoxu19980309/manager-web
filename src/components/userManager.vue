@@ -30,8 +30,8 @@
         <el-table-column prop="username" label="用户名"></el-table-column>
         <el-table-column prop="phone" label="手机号"></el-table-column>
         <el-table-column prop="gmt_create" label="创建时间"></el-table-column>
-        <el-table-column prop="name" label="交易笔数"> </el-table-column>
-        <el-table-column prop="address" label="总交易金额"></el-table-column>
+        <el-table-column prop="total_num" label="总交易商品量"> </el-table-column>
+        <el-table-column prop="total_price" label="总交易金额(元)"></el-table-column>
         <el-table-column label="是否加入黑名单">
           <template slot-scope="scope">
             <el-radio-group v-model="scope.row.is_delete"  @change="addBlack(scope.row)">

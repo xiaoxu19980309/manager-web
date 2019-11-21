@@ -9,6 +9,9 @@ const API = {
   addGoods: "api/goods/addGoods",//添加商品
   getGoodsList: "api/goods/getGoodsList",//获取商品列表
   updateGoods: "api/goods/updateGoods",//修改商品信息
+  getOrderListAdmin: "api/order/getOrderListAdmin",//获取订单记录
+  deleteOrder: "api/order/deleteOrder",//删除订单
+  getStatics: "api/order/getStatics",//获取统计数据
 }
 
 export { API }

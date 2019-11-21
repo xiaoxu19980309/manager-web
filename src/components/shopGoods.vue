@@ -47,7 +47,9 @@
         style="width: 100%">
         <el-table-column prop="goods_name" label="商品名称"></el-table-column>
         <el-table-column prop="typeName" label="类别"></el-table-column>
-        <el-table-column prop="gmt_modified" label="最后修改时间"></el-table-column>
+        <el-table-column prop="goods_price" label="单价（元）"></el-table-column>
+        <el-table-column prop="goods_num" label="库存（件）"></el-table-column>
+        <el-table-column prop="has_sold" label="已售（件）"></el-table-column>
         <el-table-column prop="name" label="状态">
           <template slot-scope="scope">
             <span v-if="scope.row.is_delete!=1>0">
@@ -65,7 +67,7 @@
             </el-radio-group>
           </template>
         </el-table-column>
-        <el-table-column prop="goods_num" label="库存"></el-table-column>
+        <el-table-column prop="gmt_modified" label="最后修改时间"></el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <div>
