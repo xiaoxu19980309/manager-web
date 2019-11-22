@@ -241,6 +241,7 @@ export default {
       this.form.type = ""
       this.form.price = ""
       this.form.number = ""
+      this.form.description = ""
       this.form.isSpecial = 0
     },
     editGoods(good){

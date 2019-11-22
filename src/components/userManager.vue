@@ -168,7 +168,6 @@ export default {
       }).catch(()=>{
         item.is_admin = item.is_admin==1?0:1
       })
-      
     },
     handleCurrentChange(val){
       let param = {pageNum: val}
