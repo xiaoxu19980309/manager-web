@@ -109,7 +109,19 @@ export default {
       this.getData(param)
     },
     handleCurrentChange(val){
-
+      let param = {pageNum: this.currentPage}
+      if(!!this.param.goodsName){
+        param.goods_name = this.param.goodsName
+      }
+      if(this.dateBetween!=null&&this.dateBetween.length==2){
+        param.startTime = Time.transform(this.dateBetween[0])
+        param.endTime = Time.transform(this.dateBetween[1])
+      }
+      if(param.startTime == param.endTime&&!!param.startTime){
+        param.endTime = param.endTime.split(" ")[0]
+        param.endTime = param.endTime + " 23:59:59"
+      }
+      this.getData(param)
     }
   }
 }

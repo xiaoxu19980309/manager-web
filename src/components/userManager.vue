@@ -99,7 +99,6 @@ export default {
         param.username = this.param.username
       if(!!this.param.phone)
         param.phone = this.param.phone
-      
       this.getData(param)
     },
     addBlack(item){
@@ -172,7 +171,12 @@ export default {
       
     },
     handleCurrentChange(val){
-
+      let param = {pageNum: val}
+      if(!!this.param.username)
+        param.username = this.param.username
+      if(!!this.param.phone)
+        param.phone = this.param.phone
+      this.getData(param)
     }
   }
 }

@@ -4,6 +4,7 @@ const API = {
   changeAdminStatus: "api/user/changeAdminStatus",//修改用户状态
   addGoodsType: "api/goodsType/addGoodsType",//添加商品类别
   getTypeList: "api/goodsType/getTypeList",//获取类别列表
+  getTypeActiveList: "api/goodsType/getTypeActiveList",//获取启用的商品类别列表
   deleteType: "api/goodsType/deleteType",//删除类别
   updateGoodsType: "api/goodsType/updateGoodsType",//更新类别
   addGoods: "api/goods/addGoods",//添加商品

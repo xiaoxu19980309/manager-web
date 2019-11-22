@@ -300,7 +300,6 @@ export default {
       })
     },
     searchData(type){
-      console.log(Time.transform(this.dateBetween1[0]))
       let param = {}
       if(type==1){
         param.is_pay = null
@@ -343,13 +342,46 @@ export default {
       }
     },
     handleCurrentChange1(val){
-
+      let param = {pageNum: val}
+      if(!!this.param1.orderId)
+        param.order_id = this.param1.orderId
+      if(this.dateBetween1!=null&&this.dateBetween1.length==2){
+        param.startTime = Time.transform(this.dateBetween1[0])
+        param.endTime = Time.transform(this.dateBetween1[1])
+      }
+      if(param.startTime == param.endTime &&!!param.startTime){
+        param.endTime = param.endTime.split(" ")[0]
+        param.endTime = param.endTime + ' 23:59:59'
+      }
+      this.getDate(1,param)
     },
     handleCurrentChange2(val){
-
+      let param = {pageNum: val}
+      if(!!this.param2.orderId)
+        param.order_id = this.param2.orderId
+      if(this.dateBetween2!=null&&this.dateBetween2.length==2){
+        param.startTime = Time.transform(this.dateBetween2[0])
+        param.endTime = Time.transform(this.dateBetween2[1])
+      }
+      if(param.startTime == param.endTime &&!!param.startTime){
+        param.endTime = param.endTime.split(" ")[0]
+        param.endTime = param.endTime + ' 23:59:59'
+      }
+      this.getDate(2,param)
     },
     handleCurrentChange3(val){
-
+      let param = {pageNum: val}
+      if(!!this.param3.orderId)
+        param.order_id = this.param3.orderId
+      if(this.dateBetween3!=null&&this.dateBetween3.length==2){
+        param.startTime = Time.transform(this.dateBetween3[0])
+        param.endTime = Time.transform(this.dateBetween3[1])
+      }
+      if(param.startTime == param.endTime &&!!param.startTime){
+        param.endTime = param.endTime.split(" ")[0]
+        param.endTime = param.endTime + ' 23:59:59'
+      }
+      this.getDate(3,param)
     }
   }
 }

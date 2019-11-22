@@ -73,7 +73,8 @@
             <div>
               <el-button type="text" @click="editGoods(scope.row)">编辑</el-button>
               <span>|</span>
-              <el-button type="text">下架</el-button>
+              <el-button v-if="scope.row.is_delete==0" type="text" @click="deleteGoods(scope.row)">下架</el-button>
+              <el-button v-else type="text" @click="deleteGoods(scope.row)">上架</el-button>
             </div>
           </template>
         </el-table-column>
@@ -221,7 +222,7 @@ export default {
     },
     //获取类别列表
     getTypeList(){
-      this.axios.post(API.getTypeList,{
+      this.axios.post(API.getTypeActiveList,{
         pageSize: 999
       }).then(res =>{
         if(res.resultCode==200){
@@ -256,6 +257,48 @@ export default {
         this.form.isSpecial = good.is_special
         this.form.description = good.description
         this.title = "编辑商品"
+      }
+    },
+    //下架或上架
+    deleteGoods(item){
+      let param = {
+        id: item.id,
+        is_delete: item.is_delete==0?1:0
+      }
+      if(item.is_delete==0){
+        this.$confirm("是否将该商品下架？","提示",{
+          confirmTextButton: "确定",
+          cancelTextButton: "取消",
+          type: "warning"
+        }).then(()=>{
+            this.axios.post(API.updateGoods,param).then(res=>{
+              if(res.resultCode!=200){
+                this.$message.error(res.resultMsg)
+              }else{
+                this.$message.success("下架成功！")
+                this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
+              }
+            }).catch(e=>{
+            })
+        }).catch(()=>{
+        })
+      }else{
+        this.$confirm("是否将该商品上架？","提示",{
+          confirmTextButton: "确定",
+          cancelTextButton: "取消",
+          type: "warning"
+        }).then(()=>{
+            this.axios.post(API.updateGoods,param).then(res=>{
+              if(res.resultCode!=200){
+                this.$message.error(res.resultMsg)
+              }else{
+                this.$message.success("上架成功！")
+                this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
+              }
+            }).catch(e=>{
+            })
+        }).catch(()=>{
+        })
       }
     },
     checkNull(){
@@ -305,7 +348,7 @@ export default {
           }else{
             this.dialogVisible = false
             this.$message.success(res.resultMsg)
-            this.getTable({pageNum: this.currentPage})
+            this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
           }
         }).catch(e=>{
 
@@ -318,7 +361,7 @@ export default {
           }else{
             this.dialogVisible = false
             this.$message.success(res.resultMsg)
-            this.getTable({pageNum: this.currentPage})
+            this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
           }
         }).catch(e=>{
 
@@ -373,7 +416,12 @@ export default {
     },
     //分页
     handleCurrentChange(val){
-
+      let param = {
+        pageNum: val,
+        type_id: parseInt(this.param.type),
+        status: parseInt(this.param.status)
+      }
+      this.getTable(param)
     },
     //关闭弹窗
     handleClose(){

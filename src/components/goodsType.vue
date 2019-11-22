@@ -176,7 +176,7 @@ export default {
     },
     //分页
     handleCurrentChange(val){
-
+      this.getTableData({pageNum: val})
     },
     //关闭弹窗
     handleClose(){
