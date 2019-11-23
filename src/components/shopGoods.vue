@@ -130,15 +130,15 @@
             action="https://jsonplaceholder.typicode.com/posts/"
             :on-remove="handleRemove"
             :on-change="handleChange"
-            :before-remove="beforeRemove"
             :http-request="handleSubmit"
+            :before-upload="beforeAvatarUpload"
             multiple
             :limit="5"
             :on-exceed="handleExceed"
             :file-list="fileList"
             list-type="picture">
             <el-button style="margin-left:20px" size="small" type="primary">点击上传</el-button>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb,最多上传五张</div>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2MB,最多上传五张</div>
           </el-upload>
         </el-form-item>
       </el-form>
@@ -499,8 +499,16 @@ export default {
     handleExceed(files, fileList) {
       this.$message.warning(`最多上传 5 张图片`);
     },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除该文件？`);
+    beforeAvatarUpload(file){
+      const isPic = file.type === 'image/jpeg' || file.type === 'image/png'
+      const isLimit = file.size/1024/1024 <2
+      if(!isPic){
+        this.$message.error("上传文件只能是jpg或png格式！");
+      }
+      if(!isLimit){
+        this.$message.error("上传图片大小不能超过 2MB！");
+      }
+      return isPic&&isLimit;
     }
   }
 }
