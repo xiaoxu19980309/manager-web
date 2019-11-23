@@ -13,6 +13,7 @@ const API = {
   getOrderListAdmin: "api/order/getOrderListAdmin",//获取订单记录
   deleteOrder: "api/order/deleteOrder",//删除订单
   getStatics: "api/order/getStatics",//获取统计数据
+  uploadFile: "api/goods/uploadFile",//上传文件
 }
 
 export { API }

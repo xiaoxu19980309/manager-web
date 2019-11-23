@@ -128,13 +128,15 @@
           <el-upload
             class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
             :on-remove="handleRemove"
+            :on-change="handleChange"
             :before-remove="beforeRemove"
+            :http-request="handleSubmit"
             multiple
-            :limit="3"
+            :limit="5"
             :on-exceed="handleExceed"
-            :file-list="fileList">
+            :file-list="fileList"
+            list-type="picture">
             <el-button style="margin-left:20px" size="small" type="primary">点击上传</el-button>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb,最多上传五张</div>
           </el-upload>
@@ -175,6 +177,7 @@ export default {
       }],
       tableData: [],
       fileList: [],
+      urlList: [],
       param: {
         type: 0,
         status: "0",
@@ -239,10 +242,13 @@ export default {
     initForm(){
       this.form.goodName = ""
       this.form.type = ""
+      this.form.id = ""
       this.form.price = ""
       this.form.number = ""
       this.form.description = ""
       this.form.isSpecial = 0
+      this.fileList = []
+      this.urlList = []
     },
     editGoods(good){
       if(good==null){
@@ -257,6 +263,23 @@ export default {
         this.form.number = good.goods_num
         this.form.isSpecial = good.is_special
         this.form.description = good.description
+        this.fileList = []
+        this.urlList = []
+        if(!!good.main_pic){
+          let name = good.main_pic.substr(good.main_pic.lastIndexOf("\\")+1)
+          let url = "http://localhost:8082/file/"+name
+          this.fileList.push({url: url});
+          this.urlList.push(good.main_pic)
+        }
+        if(!!good.sub_pic){
+          let arr = JSON.parse(good.sub_pic)
+          for(let i=0;i<arr.length;i++){
+            let name = arr[i].substr(arr[i].lastIndexOf("\\")+1)
+            let url = "http://localhost:8082/file/"+name
+            this.fileList.push({url: url})
+            this.urlList.push(arr[i]);
+          }
+        }
         this.title = "编辑商品"
       }
     },
@@ -337,11 +360,21 @@ export default {
         goods_name: this.form.goodName,
         goods_price: parseFloat(this.form.price),
         goods_num: parseInt(this.form.number),
-        type_id: parseInt(this.form.type)
+        type_id: parseInt(this.form.type),
+        main_pic: "",
+        sub_pic: [],
       }
       if(!!this.form.description){
         param.description = this.form.description
       }
+      for(let i=0;i<this.urlList.length;i++){
+        if(i==0){
+          param.main_pic = this.urlList[i]
+        }else{
+          param.sub_pic = param.sub_pic.concat(this.urlList[i])
+        }
+      }
+      param.sub_pic = JSON.stringify(param.sub_pic)
       if(!!!this.form.id){
         this.axios.post(API.addGoods,param).then(res=>{
           if(res.resultCode!=200){
@@ -424,21 +457,50 @@ export default {
       }
       this.getTable(param)
     },
+    //文件上传
+    handleSubmit(files){
+      let file = new FormData()
+      file.append("file",files.file)
+      let _this = this
+      this.axios.post(API.uploadFile,file,{
+        headers:{'Content-Type':'multipart/form-data'}
+      }).then(res=>{
+        if(res.resultCode!=200){
+          _this.$message.error(res.resultMsg)
+        }else{
+          _this.$message.success(res.resultMsg)
+          _this.urlList.push(res.data)
+        }
+      }).catch(e=>{
+
+      })
+    },
     //关闭弹窗
     handleClose(){
       this.dialogVisible = false
     },
+    handleChange(file,fileList){
+      this.fileList = fileList
+    },
     handleRemove(file, fileList) {
+      if(this.fileList.length==1){
+        this.fileList.splice(0,1);
+        this.urlList.splice(0,1)
+      }else{
+        for(let i=0;i<this.fileList.length;i++){
+          if(file.url == this.fileList[i].url){
+            this.fileList.splice(i,1);
+            this.urlList.splice(i,1)
+          }
+        }
+      }
       console.log(file, fileList);
     },
-    handlePreview(file) {
-      console.log(file);
-    },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(`最多上传 5 张图片`);
     },
     beforeRemove(file, fileList) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
+      return this.$confirm(`确定移除该文件？`);
     }
   }
 }
