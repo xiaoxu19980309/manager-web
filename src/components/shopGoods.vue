@@ -300,7 +300,7 @@ export default {
                 this.$message.error(res.resultMsg)
               }else{
                 this.$message.success("下架成功！")
-                this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
+                this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type})
               }
             }).catch(e=>{
             })
@@ -317,7 +317,7 @@ export default {
                 this.$message.error(res.resultMsg)
               }else{
                 this.$message.success("上架成功！")
-                this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
+                this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type})
               }
             }).catch(e=>{
             })
@@ -382,7 +382,7 @@ export default {
           }else{
             this.dialogVisible = false
             this.$message.success(res.resultMsg)
-            this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
+            this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type})
           }
         }).catch(e=>{
 
@@ -395,7 +395,7 @@ export default {
           }else{
             this.dialogVisible = false
             this.$message.success(res.resultMsg)
-            this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type_id})
+            this.getTable({pageNum: this.currentPage,status: this.param.status,type_id: this.param.type})
           }
         }).catch(e=>{
 
