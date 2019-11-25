@@ -14,6 +14,13 @@ const API = {
   deleteOrder: "api/order/deleteOrder",//删除订单
   getStatics: "api/order/getStatics",//获取统计数据
   uploadFile: "api/goods/uploadFile",//上传文件
+  getPartList: "api/part/getPartList",//首页模块列表
+  addPart: "api/part/addPart",//添加首页模块
+  deletePart: "api/part/deletePart",//删除模块
+  updatePart: "api/part/updatePart",//更新模块
+  getPartDetailList: "api/partDetail/getPartDetailList",//获取模块内容list
+  addPartDetail: "api/partDetail/addPartDetail",//添加模块内容
+  deletePartDetail: "api/partDetail/deletePartDetail",//删除模块内容
 }
 
 export { API }
