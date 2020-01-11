@@ -69,8 +69,8 @@ export default {
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.axios.post(API.adminLogin,{
-              username: "xudeng",
-              password: "123456",
+              username: this.form.username,
+              password: this.form.password,
             }).then(res =>{
               loading.close();
               if(res.resultCode!=200){

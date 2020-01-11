@@ -111,6 +111,7 @@ export default {
       })
     },
     initForm(){
+      this.title = "新增商品类别"
       this.form.id = ""
       this.form.typeName = ""
       this.form.note = ""

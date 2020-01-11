@@ -240,6 +240,7 @@ export default {
       })
     },
     initForm(){
+      this.title = "新增商品"
       this.form.goodName = ""
       this.form.type = ""
       this.form.id = ""

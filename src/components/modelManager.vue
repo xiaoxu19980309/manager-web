@@ -106,6 +106,7 @@ export default {
       })
     },
     initForm(){
+      this.title = "新增模块"
       this.form.modelName = ""
       this.form.show = 0
       this.form.id = ""
@@ -141,9 +142,10 @@ export default {
       this.dialogVisible = true
       this.initForm()
       if(item!=null){
+        this.title = "编辑模块"
         this.form.id = item.id
         this.form.modelName = item.part_name
-        this.form.is_active = item.is_active
+        this.form.show = item.is_active
       }
     },
     changeActive(item){
